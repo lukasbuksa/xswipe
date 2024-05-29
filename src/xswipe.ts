@@ -49,6 +49,7 @@ export class XSwipe {
             name: name ?? "XSwipe",
             zoomLevel: opts?.zoomLevel ?? 0,
             allowZoom: opts?.allowZoom ?? false,
+            zoomDoubleTap: opts?.zoomDoubleTap ?? false,
             allowFullscreen: opts?.allowFullscreen ?? false,
             allowDownload: opts?.allowDownload ?? false,
             allowShare: opts?.allowShare ?? false,
@@ -78,7 +79,6 @@ export class XSwipe {
                     let currentIndex = index;
                     let maxIndex = elementsList.length - 1;
                     let currentZoom = 0;
-                    let isFullscreen = false;
 
                     /* Wrapper */
                     let xswipeWrapper = document.createElement("div");
@@ -133,7 +133,8 @@ export class XSwipe {
                     xswipeContentWrapper.style.maxHeight = "100%";
                     xswipeContentWrapper.style.lineHeight = "0";
                     xswipeContentWrapper.style.position = "relative";
-                    xswipeContentWrapper.style.cursor = "grab";
+                    xswipeContentWrapper.style.cursor = "pointer";
+                    xswipeContentWrapper.style.scrollbarWidth = "none";
                     xswipeContentWrapper.style.borderRadius =
                         variables.borderRadius + "px";
                     xswipeContentWrapper.style.maxHeight =
@@ -343,6 +344,38 @@ export class XSwipe {
                             dispatchXSwipeEvent(onCloseClick, "click-close");
                         }
                     });
+
+                    /* Double Click */
+                    if (variables.zoomDoubleTap) {
+                        xswipeContentWrapper.addEventListener(
+                            "dblclick",
+                            () => {
+                                if (currentZoom > 0) {
+                                    currentZoom = 0;
+                                    xswiperContent.remove();
+                                    xswiperContent = Content(
+                                        elementsList[currentIndex],
+                                        currentZoom,
+                                        variables
+                                    );
+                                    xswipeContentWrapper.appendChild(
+                                        xswiperContent
+                                    );
+                                } else if (currentZoom < variables.zoomLevel) {
+                                    currentZoom++;
+                                    xswiperContent.remove();
+                                    xswiperContent = Content(
+                                        elementsList[currentIndex],
+                                        currentZoom,
+                                        variables
+                                    );
+                                    xswipeContentWrapper.appendChild(
+                                        xswiperContent
+                                    );
+                                }
+                            }
+                        );
+                    }
                 });
             });
         });

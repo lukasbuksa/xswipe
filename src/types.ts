@@ -9,6 +9,7 @@ export type XSwipeProps = {
         bgColor?: string;
         zoomLevel?: number;
         allowZoom?: boolean;
+        zoomDoubleTap?: boolean;
         allowFullscreen?: boolean;
         allowDownload?: boolean;
         allowShare?: boolean;

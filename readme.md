@@ -30,6 +30,7 @@ const xswipe = new XSwipe({
         bgColor: string, // default: "rgba(0, 0, 0, 0.9)"
         zoomLevel: number, // default: 0
         allowZoom: boolean, // default: false
+        zoomDoubleTap: boolean, // default: false
         allowFullscreen: boolean, // default: false
         allowDownload: boolean, // coming soon
         allowShare: boolean, // coming soon
