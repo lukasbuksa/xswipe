@@ -16,9 +16,11 @@ export function Title(element: any, variables: any) {
         title.textContent = element.dataset.xswipeTitle;
 
         if (variables.navigationPosition === "top") {
-            title.style.bottom = variables.padding / 2 - 5 + "px";
+            title.style.bottom =
+                variables.padding / 2 - variables.space / 2 + "px";
         } else if (variables.navigationPosition === "bottom") {
-            title.style.top = variables.padding / 2 - 5 + "px";
+            title.style.top =
+                variables.padding / 2 - variables.space / 2 + "px";
         } else {
             console.error("XSwipe: Invalid navigation position");
         }

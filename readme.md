@@ -1,4 +1,4 @@
-# XSwipe v0.1
+# XSwipe v0.0.2
 
 -   TypeScript support
 -   Supported formats: img, iframe

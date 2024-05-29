@@ -38,7 +38,13 @@ export function Content(element: any, currentZoom: number, variables: any) {
     } else {
         if (!variables.allowZoom || currentZoom <= 0) {
             xswipeContent.style.maxWidth = "100%";
-            xswipeContent.style.maxHeight = "100%";
+            xswipeContent.style.maxHeight =
+                "calc(100vh - " +
+                (variables.padding +
+                    variables.padding +
+                    variables.space +
+                    variables.actionsSize) +
+                "px)";
         }
     }
 
