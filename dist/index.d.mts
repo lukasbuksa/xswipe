@@ -13,6 +13,10 @@ type XSwipeProps = {
         allowDownload?: boolean;
         allowShare?: boolean;
         navigationPosition?: "top" | "bottom";
+        borderRadius?: number;
+        closeColor?: string;
+        actionsColor?: string;
+        actionsSize?: number;
     };
 };
 

@@ -1,6 +1,6 @@
 {
     "name": "xswipe",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "description": "",
     "keywords": [
         "xswipe",
@@ -25,7 +25,7 @@
         "url": "https://github.com/lukasbuksa/xswipe.git"
     },
     "author": "Lukáš Buksa",
-    "license": "MIT",
+    "license": "CC-BY-NC-SA-4.0",
     "bugs": {
         "url": "https://github.com/lukasbuksa/xswipe/issues"
     },

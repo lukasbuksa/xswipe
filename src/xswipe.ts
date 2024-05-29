@@ -57,10 +57,10 @@ export class XSwipe {
 
             space: 10,
             padding: 30,
-            borderRadius: 10,
-            closeColor: "red",
-            actionsColor: "gray",
-            actionsSize: 42,
+            borderRadius: opts?.borderRadius ?? 10,
+            closeColor: opts?.closeColor ?? "red",
+            actionsColor: opts?.actionsColor ?? "gray",
+            actionsSize: opts?.actionsSize ?? 42,
         };
 
         wrapperElementList.forEach((wrapperElement) => {
