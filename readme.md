@@ -1,6 +1,6 @@
 # XSwipe v0.0.3
 
-By Lukáš Buksa - https:
+By Lukáš Buksa - [https://lukasbuksa.com](https://lukasbuksa.com)
 
 -   Vanilla JavaScript lightbox / media-box
 -   TypeScript support
