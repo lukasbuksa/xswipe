@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "target": "ES2022",
+        "module": "CommonJS",
+        "moduleResolution": "Node",
+        "noImplicitAny": true,
+        "forceConsistentCasingInFileNames": true,
+        "strict": true,
+        "outDir": "./dist",
+        "isolatedModules": true,
+        "esModuleInterop": true,
+        "noEmit": true
+    },
+    "include": ["src"],
+    "exclude": ["node_modules"]
+}
