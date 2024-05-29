@@ -20,12 +20,12 @@ By Lukáš Buksa - [https://lukasbuksa.com](https://lukasbuksa.com)
 import { XSwipe } from 'xswipe'
 
 const xswipe = new XSwipe({
-    name?: string, // optional - name
+    name: string, // optional - name
     wrapper: string, // required - wrapper selector
     elements: string, // required - gallery items selector
-    onPrevClick?: () => void, // optional - callback function
-    onNextClick?: () => void, // optional - callback function
-    onCloseClick?: () => void, // optional - callback function
+    onPrevClick: () => void, // optional - callback function
+    onNextClick: () => void, // optional - callback function
+    onCloseClick: () => void, // optional - callback function
     opts: { // optional - options
         bgColor: string, // default: "rgba(0, 0, 0, 0.9)"
         zoomLevel: number, // default: 0
