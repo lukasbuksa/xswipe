@@ -1,6 +1,8 @@
 import { Content } from "./components/content";
 import { Controls } from "./components/controls";
 import { Navigation } from "./components/navigation";
+import { Title } from "./components/title";
+import { Zoom } from "./components/zoom";
 import { XSwipeProps } from "./types";
 import { dispatchXSwipeEvent } from "./utils/events";
 
@@ -51,7 +53,7 @@ export class XSwipe {
 
         const variables = {
             name: name ?? "XSwipe",
-            zoomLevel: opts?.zoomLevel ?? 1,
+            zoomLevel: opts?.zoomLevel ?? 0,
             allowZoom: opts?.allowZoom ?? false,
             allowFullscreen: opts?.allowFullscreen ?? false,
             allowDownload: opts?.allowDownload ?? false,
@@ -72,6 +74,8 @@ export class XSwipe {
 
                 let currentIndex = index;
                 let maxIndex = elementsList.length - 1;
+                let currentZoom = 0;
+                let isFullscreen = false;
 
                 /* Wrapper */
                 let xswipeWrapper = document.createElement("div");
@@ -89,12 +93,22 @@ export class XSwipe {
                 xswipeWrapper.style.display = "flex";
                 xswipeWrapper.style.justifyContent = "center";
                 xswipeWrapper.style.alignItems = "center";
-                xswipeWrapper.style.paddingTop = variables.padding + "px";
                 xswipeWrapper.style.paddingLeft = variables.padding + "px";
                 xswipeWrapper.style.paddingRight = variables.padding + "px";
-                xswipeWrapper.style.paddingBottom =
-                    variables.padding + variables.actionsSize + "px";
                 xswipeWrapper.style.boxSizing = "border-box";
+                if (variables.navigationPosition === "top") {
+                    xswipeWrapper.style.paddingBottom =
+                        variables.padding + 10 + "px";
+                    xswipeWrapper.style.paddingTop =
+                        variables.padding + variables.actionsSize + "px";
+                } else if (variables.navigationPosition === "bottom") {
+                    xswipeWrapper.style.paddingTop =
+                        variables.padding + 10 + "px";
+                    xswipeWrapper.style.paddingBottom =
+                        variables.padding + variables.actionsSize + "px";
+                } else {
+                    console.error("XSwipe: Invalid navigation position");
+                }
 
                 /* Wrapper Container */
                 let xswipeContainer = document.createElement("div");
@@ -102,26 +116,37 @@ export class XSwipe {
                 xswipeContainer.style.position = "relative";
                 xswipeContainer.style.width = "fit-content";
                 xswipeContainer.style.height = "fit-content";
+                xswipeContainer.style.maxWidth = "100%";
+                xswipeContainer.style.maxHeight = "100%";
 
                 /* Content Wrapper */
                 let xswipeContentWrapper = document.createElement("div");
                 xswipeContentWrapper.classList.add("xswipe-content-wrapper");
                 xswipeContentWrapper.style.width = "fit-content";
                 xswipeContentWrapper.style.height = "fit-content";
+                xswipeContentWrapper.style.maxWidth = "100%";
+                xswipeContentWrapper.style.maxHeight = "100%";
                 xswipeContentWrapper.style.lineHeight = "0";
+                xswipeContentWrapper.style.position = "relative";
+                xswipeContentWrapper.style.cursor = "grab";
                 xswipeContentWrapper.style.borderRadius =
                     variables.borderRadius + "px";
                 xswipeContentWrapper.style.maxHeight =
-                    "calc(100vh - " + variables.padding * 2 + "px)";
+                    "calc(100vh - " +
+                    (variables.padding +
+                        variables.padding +
+                        variables.actionsSize) +
+                    "px)";
                 xswipeContentWrapper.style.overflow = "auto";
+                Zoom(xswipeContentWrapper, variables);
 
                 /* Content */
-                let xswiperContent = Content(element, variables);
+                let xswiperContent = Content(element, currentZoom, variables);
 
                 /* Navigation */
                 let xswipeNavigation = Navigation(
                     variables,
-                    index,
+                    element,
                     currentIndex,
                     maxIndex
                 );
@@ -134,6 +159,9 @@ export class XSwipe {
                     maxIndex
                 );
 
+                /* Title */
+                let xswipeTitle = Title(element, variables);
+
                 /* Append Wrappers */
 
                 xswipeContentWrapper.appendChild(xswiperContent);
@@ -142,6 +170,9 @@ export class XSwipe {
                 xswipeContainer.appendChild(xswipeContentWrapper);
                 xswipeWrapper.appendChild(xswipeContainer);
                 xswipeWrapper.appendChild(xswipeNavigation.actions);
+                if (xswipeTitle) {
+                    xswipeWrapper.appendChild(xswipeTitle);
+                }
 
                 document.body.appendChild(xswipeWrapper);
 
@@ -151,13 +182,47 @@ export class XSwipe {
                         xswipeWrapper.remove();
                         dispatchXSwipeEvent(onCloseClick, "close-button");
                     });
+                    xswipeNavigation.zoomPlus.addEventListener("click", () => {
+                        if (currentZoom < variables.zoomLevel) {
+                            currentZoom++;
+                            xswiperContent.remove();
+                            xswiperContent = Content(
+                                elementsList[currentIndex],
+                                currentZoom,
+                                variables
+                            );
+                            xswipeContentWrapper.appendChild(xswiperContent);
+                        }
+                    });
+                    xswipeNavigation.zoomMinus.addEventListener("click", () => {
+                        if (currentZoom > 0) {
+                            currentZoom--;
+                            xswiperContent.remove();
+                            xswiperContent = Content(
+                                elementsList[currentIndex],
+                                currentZoom,
+                                variables
+                            );
+                            xswipeContentWrapper.appendChild(xswiperContent);
+                        }
+                    });
+                    xswipeNavigation.fullscreen.addEventListener(
+                        "click",
+                        () => {
+                            if (!document.fullscreenElement) {
+                                xswipeWrapper.requestFullscreen();
+                            } else {
+                                document.exitFullscreen();
+                            }
+                        }
+                    );
                 }
 
                 function refreshActions() {
                     xswipeNavigation.actions.remove();
                     xswipeNavigation = Navigation(
                         variables,
-                        currentIndex,
+                        elementsList[currentIndex],
                         currentIndex,
                         maxIndex
                     );
@@ -170,12 +235,24 @@ export class XSwipe {
                     xswipeControls.next.addEventListener("click", () => {
                         if (currentIndex < maxIndex) {
                             currentIndex++;
+                            currentZoom = 0;
                             xswiperContent.remove();
                             xswiperContent = Content(
                                 elementsList[currentIndex],
+                                currentZoom,
                                 variables
                             );
                             xswipeContentWrapper.appendChild(xswiperContent);
+                            if (xswipeTitle) {
+                                xswipeTitle.remove();
+                            }
+                            xswipeTitle = Title(
+                                elementsList[currentIndex],
+                                variables
+                            );
+                            if (xswipeTitle) {
+                                xswipeWrapper.appendChild(xswipeTitle);
+                            }
                             refreshActions();
                             refreshControls();
                             dispatchXSwipeEvent(onNextClick, "click-next");
@@ -186,12 +263,24 @@ export class XSwipe {
                     xswipeControls.previous.addEventListener("click", () => {
                         if (currentIndex > 0) {
                             currentIndex--;
+                            currentZoom = 0;
                             xswiperContent.remove();
                             xswiperContent = Content(
                                 elementsList[currentIndex],
+                                currentZoom,
                                 variables
                             );
                             xswipeContentWrapper.appendChild(xswiperContent);
+                            if (xswipeTitle) {
+                                xswipeTitle.remove();
+                            }
+                            xswipeTitle = Title(
+                                elementsList[currentIndex],
+                                variables
+                            );
+                            if (xswipeTitle) {
+                                xswipeWrapper.appendChild(xswipeTitle);
+                            }
                             refreshActions();
                             refreshControls();
                             dispatchXSwipeEvent(onPrevClick, "click-prev");

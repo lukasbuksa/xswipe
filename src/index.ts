@@ -3,7 +3,8 @@
 export * from "./xswipe";
 export * from "./types";
 
-/*let swipee = new XSwipe({
+/* Example usage */
+/*let xswipe = new XSwipe({
     name: "XSwipe",
     wrapper: "[data-xswipe]",
     elements: "a",
@@ -11,8 +12,9 @@ export * from "./types";
         console.log("Close button clicked!");
     },
     opts: {
+        navigationPosition: "bottom",
         bgColor: "rgba(0, 0, 0, 0.9)",
-        zoomLevel: 1,
+        zoomLevel: 3,
         allowZoom: true,
         allowFullscreen: true,
     },
