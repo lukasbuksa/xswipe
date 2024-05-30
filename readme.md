@@ -1,4 +1,4 @@
-# XSwipe v0.0.3
+# XSwipe v0.0.4
 
 By Lukáš Buksa - [https://lukasbuksa.com](https://lukasbuksa.com)
 
