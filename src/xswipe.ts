@@ -65,6 +65,10 @@ export class XSwipe {
         };
 
         wrapperElementList.forEach((wrapperElement) => {
+            if (wrapperElement.classList.contains("xswipe-initialized")) {
+                return;
+            }
+            wrapperElement.classList.add("xswipe-initialized");
             let elementsList = wrapperElement.querySelectorAll(
                 elements
             ) as NodeListOf<HTMLElement>;
